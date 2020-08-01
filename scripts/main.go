@@ -115,7 +115,7 @@ func deployLinux() {
 		}
 	}
 
-	serviceFilePath := filepath.Join("etc", "systemd", "system", fmt.Sprintf("%s.service", PackageName))
+	serviceFilePath := filepath.Join("/etc", "systemd", "system", fmt.Sprintf("%s.service", PackageName))
 	if err != nil {
 		exit(3003, err.Error())
 	}
