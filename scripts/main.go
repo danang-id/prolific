@@ -115,8 +115,7 @@ func deployLinux() {
 		}
 	}
 
-	serviceFilePath, _ := filepath.Abs(
-		filepath.Join("etc", "systemd", "system", fmt.Sprintf("%s.service", PackageName)))
+	serviceFilePath := filepath.Join("etc", "systemd", "system", fmt.Sprintf("%s.service", PackageName))
 	if err != nil {
 		exit(3003, err.Error())
 	}
@@ -141,14 +140,14 @@ func deployLinux() {
 		exit(3006, err.Error())
 	}
 
-	excutablePath, err := exec.LookPath("systemctl")
+	executablePath, err := exec.LookPath("systemctl")
 	if err != nil {
 		exit(3007, err.Error())
 	}
 
 	command := &exec.Cmd{
-		Path: excutablePath,
-		Args: append([]string{excutablePath},"enable", PackageName + ".service"),
+		Path: executablePath,
+		Args: append([]string{executablePath},"enable", PackageName + ".service"),
 		Env:  os.Environ(),
 		Dir:  getWorkDir(),
 	}
@@ -163,8 +162,8 @@ func deployLinux() {
 	}
 
 	command = &exec.Cmd{
-		Path: excutablePath,
-		Args: append([]string{excutablePath},"restart", PackageName + ".service"),
+		Path: executablePath,
+		Args: append([]string{executablePath},"restart", PackageName + ".service"),
 		Env:  os.Environ(),
 		Dir:  getWorkDir(),
 	}
