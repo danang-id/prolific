@@ -2,6 +2,7 @@ package web_hook
 
 import (
 	"errors"
+	"fmt"
 	"os"
 	"path/filepath"
 	"prolific/config"
@@ -54,21 +55,24 @@ func deploy(owner string, repository string, branch string) ([]common.Executable
 
 	user := config.GetWithDefault("Prolific", "User", "root")
 
-	executableLog, err := execute(suExec, user, "git", "checkout", branch)
+	commandString := fmt.Sprintf("\"git checkout %s\"", branch)
+	executableLog, err := execute(suExec, user, "-c", commandString)
 	executableLogs = append(executableLogs, executableLog)
 	if err != nil {
 		debug.Printf("Deployment Finished with Error (Reason: %s)\n", err.Error())
 		return executableLogs, err
 	}
 
-	executableLog, err = execute(suExec, user, "git", "pull")
+	commandString = fmt.Sprintf("\"git pull\"")
+	executableLog, err = execute(suExec, user, "-c", commandString)
 	executableLogs = append(executableLogs, executableLog)
 	if err != nil {
 		debug.Printf("Deployment Finished with Error (Reason: %s)\n", err.Error())
 		return executableLogs, err
 	}
 
-	executableLog, err = execute(suExec, user, "make")
+	commandString = fmt.Sprintf("\"make\"")
+	executableLog, err = execute(suExec, user, "-c", commandString)
 	executableLogs = append(executableLogs, executableLog)
 	if err != nil {
 		debug.Printf("Deployment Finished with Error (Reason: %s)\n", err.Error())
