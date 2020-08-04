@@ -34,7 +34,7 @@ func deploy(owner string, repository string, branch string) ([]common.Executable
 		}
 	}
 
-	gitExec, err := common.NewExecutable("git", repoPath)
+	suExec, err := common.NewExecutable("su", repoPath)
 	if err != nil {
 		debug.Printf("Deployment Finished with Error (Reason: %s)\n", err.Error())
 		return executableLogs, err
@@ -46,27 +46,29 @@ func deploy(owner string, repository string, branch string) ([]common.Executable
 		return executableLogs, err
 	}
 
-	err = checkDependencies(gitExec, makeExec)
+	err = checkDependencies(suExec, makeExec)
 	if err != nil {
 		debug.Printf("Deployment Finished with Error (Reason: %s)\n", err.Error())
 		return executableLogs, err
 	}
 
-	executableLog, err := execute(gitExec, "checkout", branch)
+	user := config.GetWithDefault("Prolific", "User", "root")
+
+	executableLog, err := execute(suExec, user, "git", "checkout", branch)
 	executableLogs = append(executableLogs, executableLog)
 	if err != nil {
 		debug.Printf("Deployment Finished with Error (Reason: %s)\n", err.Error())
 		return executableLogs, err
 	}
 
-	executableLog, err = execute(gitExec, "pull")
+	executableLog, err = execute(suExec, user, "git", "pull")
 	executableLogs = append(executableLogs, executableLog)
 	if err != nil {
 		debug.Printf("Deployment Finished with Error (Reason: %s)\n", err.Error())
 		return executableLogs, err
 	}
 
-	executableLog, err = execute(makeExec)
+	executableLog, err = execute(suExec, user, "make")
 	executableLogs = append(executableLogs, executableLog)
 	if err != nil {
 		debug.Printf("Deployment Finished with Error (Reason: %s)\n", err.Error())
