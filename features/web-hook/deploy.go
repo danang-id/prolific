@@ -55,7 +55,7 @@ func deploy(owner string, repository string, branch string) ([]common.Executable
 
 	user := config.GetWithDefault("Prolific", "User", "root")
 
-	commandString := fmt.Sprintf("\"git checkout %s\"", branch)
+	commandString := fmt.Sprintf("'git checkout %s'", branch)
 	executableLog, err := execute(suExec, user, "-c", commandString)
 	executableLogs = append(executableLogs, executableLog)
 	if err != nil {
@@ -63,7 +63,7 @@ func deploy(owner string, repository string, branch string) ([]common.Executable
 		return executableLogs, err
 	}
 
-	commandString = fmt.Sprintf("\"git pull\"")
+	commandString = fmt.Sprintf("'git pull'")
 	executableLog, err = execute(suExec, user, "-c", commandString)
 	executableLogs = append(executableLogs, executableLog)
 	if err != nil {
@@ -71,7 +71,7 @@ func deploy(owner string, repository string, branch string) ([]common.Executable
 		return executableLogs, err
 	}
 
-	commandString = fmt.Sprintf("\"make\"")
+	commandString = fmt.Sprintf("'make'")
 	executableLog, err = execute(suExec, user, "-c", commandString)
 	executableLogs = append(executableLogs, executableLog)
 	if err != nil {
